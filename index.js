@@ -114,11 +114,13 @@ app.post('/loggingin', async (req,res) => {
 
     const result = await userCollection.find({email: email}).project({username: 1, email: 1, password: 1, _id: 1}).toArray();
 
-    let username = result[0].username;
-    if(result.length != 1) {
+ 
+    if(result.length != 1 || username == null) {
         res.redirect('/signup');
         return;
     }
+
+    let username = result[0].username || null;
 
     if(await bcrypt.compare(password, result[0].password)) {
         req.session.authenticated = true;
