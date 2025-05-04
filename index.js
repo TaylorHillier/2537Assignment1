@@ -115,12 +115,12 @@ app.post('/loggingin', async (req,res) => {
     const result = await userCollection.find({email: email}).project({username: 1, email: 1, password: 1, _id: 1}).toArray();
 
  
-    if(result.length != 1 || username == null) {
+    if(result.length != 1 ) {
         res.redirect('/signup');
         return;
     }
 
-    let username = result[0].username || null;
+    let username = result[0].username;
 
     if(await bcrypt.compare(password, result[0].password)) {
         req.session.authenticated = true;
@@ -131,7 +131,7 @@ app.post('/loggingin', async (req,res) => {
         return;
     }
     else {
-        res.send('Invalid password!');
+
         res.redirect('/login');
         return;
     }
