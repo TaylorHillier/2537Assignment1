@@ -38,7 +38,7 @@ app.use(session({
 
 app.get('/', (req,res) => {
     if(req.session.username) {
-        res.send(`<h1> Hello ${req.session.username}!</h1><br><a href='/members'>Go to members section'</a><br><a href='/logout'>Logout</a>
+        res.send(`<h1> Hello ${req.session.username}!</h1><br><a href='/members'>Go to members section</a><br><a href='/logout'>Logout</a>
             `);
     } else {
         res.send("<br><a href='/signup'>Sign up</a><br><a href='/login'>Login</a><br>");
