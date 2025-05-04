@@ -109,7 +109,6 @@ app.post('/loggingin', async (req,res) => {
     const validation = schema.validate(email);
     if(validation.error != null) {
         res.send('Invalid username! SQL injection detected!');
-        res.redirect('/login');
         return;
     }
 
@@ -117,8 +116,7 @@ app.post('/loggingin', async (req,res) => {
 
     let username = result[0].username;
     if(result.length != 1) {
-        res.send('User not found!');
-        res.redirect('/login');
+        res.redirect('/signup');
         return;
     }
 
