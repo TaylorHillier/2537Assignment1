@@ -77,20 +77,22 @@ app.post('/createUser', async (req,res) => {
     var email = req.body.email;
     var password = req.body.password;
   
+    const schema = Joi.object({
+        username: Joi.string().alphanum().max(20).required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().max(20).required()
+    });
 
-    const schema = Joi.string().max(20).required();
-    const validation = schema.validate(email);
+    const validation = schema.validate(req.body);
     if(validation.error != null) {
         res.send('Invalid username! SQL injection detected!');
-        res.redirect('/signup');
         return;
     }
 
     const result = await userCollection.find({email: email}).toArray();
 
     if(result.length != 0) {
-        res.send('User already exists!');
-        res.redirect('/signup');
+        res.send('User already exists! <br><a href="/login">Login</a>');
         return;
     }
 
@@ -105,8 +107,12 @@ app.post('/loggingin', async (req,res) => {
     var email = req.body.email;
     var password = req.body.password;
 
-    const schema = Joi.string().max(20).required();
-    const validation = schema.validate(email);
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().max(20).required()
+    });
+
+    const validation = schema.validate(req.body);
     if(validation.error != null) {
         res.send('Invalid username! SQL injection detected!');
         return;
