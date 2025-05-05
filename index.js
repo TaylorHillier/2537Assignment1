@@ -100,7 +100,11 @@ app.post('/createUser', async (req,res) => {
 
     await userCollection.insertOne({username: username, email: email, password: hashedPassword});
 
-    res.send('User created successfully!<br><a href="/login">Login</a>');
+    req.session.authenticated = true;
+    req.session.username = username;
+    req.session.cookie.maxAge = expireTime;
+
+    return res.redirect('/members');
 });
 
 app.post('/loggingin', async (req,res) => {
