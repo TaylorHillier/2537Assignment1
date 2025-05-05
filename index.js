@@ -121,10 +121,11 @@ app.post('/loggingin', async (req,res) => {
         res.send('Invalid username! SQL injection detected!');
         return;
     }
+    
 
     const result = await userCollection.find({email: email}).project({username: 1, email: 1, password: 1, _id: 1}).toArray();
 
- 
+
     if(result.length != 1 ) {
         res.redirect('/signup');
         return;
@@ -141,8 +142,7 @@ app.post('/loggingin', async (req,res) => {
         return;
     }
     else {
-
-        res.redirect('/login');
+        res.send('Invalid password! <br><a href="/login">Login</a>');
         return;
     }
 });
