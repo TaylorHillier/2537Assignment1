@@ -1,0 +1,8 @@
+<%- include("templates/header") %> 
+<form action='/createUser' method='POST'>
+    <input type='text' name='username' placeholder='Enter a user name' required>
+       <input type='email' name='email' placeholder='Enter your email' required>
+        <input type='password' name='password' placeholder='Enter a Password' required>
+       <input type='submit' value='Submit'>
+</form>
+<%- include("templates/footer") %> 

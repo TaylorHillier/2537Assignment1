@@ -1,0 +1,21 @@
+<%- include("templates/header") %> 
+<h1>Admin Panel</h1>
+
+<% users.forEach(user => { %>
+  <div class="user">
+    <h2><%= user.username %></h2>
+    <p>(<%= user.user_type %>)</p>
+
+    <form action="/promoteUser" method="POST">
+      <input type="hidden" name="username" value="<%= user.username %>">
+      <button type="submit">Promote to Admin</button>
+    </form>
+
+    <form action="/demoteUser" method="POST">
+      <input type="hidden" name="username" value="<%= user.username %>">
+      <button type="submit">Demote to User</button>
+    </form>
+  </div>
+<% }) %>
+
+<%- include("templates/footer") %>
