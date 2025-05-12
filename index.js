@@ -42,7 +42,7 @@ app.get('/', (req,res) => {
     if(req.session.username) {
         res.render('homeLogged', {username: req.session.username});
     } else {
-        res.render('homeUnLogged');
+        res.render('homeUnlogged');
     }
 })
 
