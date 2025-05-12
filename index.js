@@ -59,6 +59,23 @@ app.get('/logout', (req,res) => {
     res.redirect('/');
 });
 
+async function isAuthenticated(req, res, next) {
+    if (!req.session.authenticated || !req.session.username) {
+        res.redirect('/login');
+    } 
+    next();
+}
+
+async function isAdmin(req, res,next) {
+    const userType =  await userCollection.find({username: req.session.username}).project({user_type: 1}).toArray();
+
+    if(userType[0].user_type != 'admin' || (await userType).length === 0) {
+        return res.render('notAdminError');
+    }
+
+    next();
+}
+
 app.post('/createUser', async (req,res) => {
     var username = req.body.username;
     var email = req.body.email;
@@ -136,41 +153,23 @@ app.post('/loggingin', async (req,res) => {
     }
 });
 
-app.get('/members', (req,res) => {
-    let random = Math.ceil((Math.random()) * 3);
+app.get('/members', isAuthenticated, async (req,res) => {
+    res.render('members', {username: req.session.username});   
+});
 
-    if(req.session.authenticated) {
-        res.render('members', {username: req.session.username, image: random});
-    } else {
-        res.redirect('/');
-    }
-}
-);
-
-app.get('/admin', async (req,res) => {
-
+app.get('/admin', isAuthenticated, isAdmin, async (req,res) => {
     const users = await userCollection.find({}).toArray();
-
-    const userType = await userCollection.find({username: req.session.username}).project({user_type: 1}).toArray();
-    if(userType[0].user_type != 'admin') {
-        res.render('notAdminError');
-        return;
-    }
-    if(userType.length == 0) {
-        res.render('noUsersError');
-        return;
-    }
 
     res.render('admin', { users });
 });
 
-app.post('/promoteUser', async (req,res) => {
+app.post('/promoteUser', isAuthenticated, isAdmin, async (req,res) => {
     const username = req.body.username;
     await userCollection.updateOne({username: username}, {$set: {user_type: 'admin'}});
     res.redirect('/admin');
 });
 
-app.post('/demoteUser', async (req,res) => {
+app.post('/demoteUser', isAuthenticated, isAdmin, async (req,res) => {
     const username = req.body.username;
     await userCollection.updateOne({username: username}, {$set: {user_type: 'user'}});
     res.redirect('/admin');

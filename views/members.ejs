@@ -1,5 +1,21 @@
 <%- include("templates/header") %> 
-<h1> Hello <%= username %>!</h1><br>
-<br><img src='/image<%= image %>.png' width='300px' height='200px'><br>
-<a href='/logout'>Logout</a>
+
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h1>Hello <%= username %>!</h1>
+  </div>
+
+  <div class="row">
+    <% for(let i = 1; i <= 3; i++) { %>
+      <div class="col-sm-12 col-md-6 col-lg-4 mb-4">
+        <img src="/image<%= i %>.png" class="img-fluid rounded shadow" alt="Image <%= i %>">
+      </div>
+    <% } %>
+  </div>
+
+  <div class="text-center mt-4">
+    <a href="/logout" class="btn btn-danger">Logout</a>
+  </div>
+</div>
+
 <%- include("templates/footer") %> 
